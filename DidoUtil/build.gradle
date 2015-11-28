@@ -1,0 +1,20 @@
+apply plugin: 'java'
+
+
+version = '0.2'
+
+jar {
+  manifest{
+    attributes 'Implementation-title':'Davide Neri util',
+                'Implementation-Version': version
+  }
+}
+
+
+//uploadArchives {
+//  repositories{
+//    flatDir{
+//      dirs '/home/dido-ubuntu/Scrivania'
+//    }
+//  }
+//}
