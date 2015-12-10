@@ -1,0 +1,10 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '0.1'
+jar {
+  manifest{
+    attributes 'Implementation-title':'Consistent hashing implementation',
+                'Implementation-Version': version
+  }
+}

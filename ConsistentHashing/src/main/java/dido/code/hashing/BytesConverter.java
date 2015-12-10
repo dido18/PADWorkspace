@@ -1,12 +1,11 @@
 package dido.code.hashing;
 
+public interface BytesConverter<T> {
 
-public interface HashFunction {
 	/**
 	 * Converts the given data into bytes.
 	 *
+	 * @param <T>
 	 */
-	
-  public byte[] hash(byte [] input) ;
-
+	public byte[] convert(T data);
 }
