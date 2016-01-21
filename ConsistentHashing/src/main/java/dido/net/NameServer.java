@@ -3,14 +3,50 @@ package dido.net;
 import java.io.*;
 import java.net.*;
 import java.util.*;
-import static java.lang.System.out;
+
 
 public class NameServer {
 	
 	
 	private HashMap<String, InetAddress> nameToIp ;
+	private int seedPort;
+	private ServerSocket ss = null;
 	
-	public NameServer(){
+	public NameServer(int sPort){
+		seedPort = sPort;
+		
+	}
+	
+	public void putOnline(){
+		 try {
+			ss = new ServerSocket(seedPort);
+			while(true){
+				Socket connection = null;
+				try{
+					System.out.println("server is listening on port "+ seedPort);
+					connection = ss.accept();
+					// logic code of the server accepted connection from a client
+					Writer out = new OutputStreamWriter(connection.getOutputStream());
+					Date now = new Date();
+					out.write(now.toString() +"\r\n");
+					out.flush();
+					connection.close();
+				}catch (IOException ex) {
+					// this request only; ignore
+				}finally{
+					try{
+						if(connection != null)
+							connection.close();
+					}catch (IOException ex) {}
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}finally {
+		  try {
+				if (ss != null) ss.close(); // alwayes close a socket whe finish
+				} catch (IOException ex) {}
+		}
 		
 	}
 	
@@ -27,44 +63,11 @@ public class NameServer {
 		
 	}
 	
-	public void putOnline() throws SocketException{
-		/*InetSocketAddress inetsocket ;
-		Enumeration<NetworkInterface> nets = NetworkInterface.getNetworkInterfaces();
-        for (NetworkInterface netint : Collections.list(nets)){
-        	Enumeration<InetAddress> inetAddresses = netint.getInetAddresses();
-        	for (InetAddress inetAddress : Collections.list(inetAddresses)) {
-                 
-               
-            }
-        }*/
-		try{
-			ServerSocket ss = create(12345);
-			System.out.println("Porta in ascolto "+ss.getLocalPort());
-			ss.accept();
-		}catch(IOException ex){
-			System.err.println("No avalable port");
-		}
-		
-	}
 	
-	public ServerSocket create( int portFeed) throws IOException{
+	public static void main(String args[]){
+		NameServer nm = new NameServer(12345);
+		nm.putOnline();
 		
-		for(int p = portFeed; p< 65535; p++){
-			System.out.println("searching port");
-			try{
-				return new ServerSocket(p);
-			}catch(IOException ex){
-				continue;
-			}
-			
-		}
-		
-		//if the program get here, no port was found
-		throw new IOException("no free port found");
-	}
-	public static void main(String args[]) throws SocketException{
-	 NameServer ns = new NameServer();
-	 ns.putOnline();
 	}
 
 
